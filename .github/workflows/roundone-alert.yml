@@ -1,1 +1,24 @@
-
+name: Round One Stock Alert
+on:
+  schedule:
+    - cron: "0 0-7 * * 1-5"
+  workflow_dispatch:
+jobs:
+  check-stock:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install packages
+        run: |
+          pip install yfinance requests
+      - name: Run checker
+        env:
+          LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
+          LINE_USER_ID: ${{ secrets.LINE_USER_ID }}
+        run: |
+          python stock_alert.py
